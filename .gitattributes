@@ -1,0 +1,2 @@
+# .h files are not C++
+*.h linguist-language=C
