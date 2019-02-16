@@ -2,7 +2,8 @@
 A small, optimizing Brainfuck interpreter.
 
 ## Usage
-microbf isn't have a standalone interpreter yet. It can be used directly in C:
+microbf doesn't have a standalone interpreter yet.
+It can be used directly in C:
 
 ```c
 #include "brainfuck.h"
