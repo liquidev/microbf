@@ -36,10 +36,10 @@ typedef enum {
 } ubf_interpret_result;
 
 /// Initializes and returns a new VM.
-ubf_vm_t* ubf_init_vm();
+ubf_vm_t* ubf_init_vm(void);
 
 /// Frees a VM.
-void ubf_free_vm();
+void ubf_free_vm(ubf_vm_t* vm);
 
 /// Interprets brainfuck code in a VM.
 ubf_interpret_result ubf_interpret(ubf_vm_t* vm, const char* code);

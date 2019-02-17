@@ -1,12 +1,12 @@
 #!/bin/bash
 
 echo " * cleaning"
-rm *.o
-rm microbf
+rm -rf *.o dist
 
 echo " * compiling"
-gcc -g -O0 -c *.c
+gcc -O3 -c *.c
 
 echo " * linking"
-gcc *.o -o microbf
+mkdir dist
+gcc *.o -o dist/microbf
 

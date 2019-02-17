@@ -19,7 +19,7 @@
 
 #define NEW(T) (T*) malloc(sizeof(T))
 
-ubf_cell_t* init_cell() {
+ubf_cell_t* init_cell(void) {
   ubf_cell_t* cell = NEW(ubf_cell_t);
   cell->value = 0;
   cell->left = NULL;
@@ -41,7 +41,7 @@ void free_cell(ubf_cell_t* cell) {
   }
 }
 
-ubf_vm_t* ubf_init_vm() {
+ubf_vm_t* ubf_init_vm(void) {
   ubf_vm_t* vm = NEW(ubf_vm_t);
   vm->pc = 0;
   vm->pos = 0;
@@ -53,7 +53,7 @@ void ubf_free_vm(ubf_vm_t* vm) {
   free(vm);
 }
 
-char getch() {
+char getch(void) {
   struct termios old, new;
   int ch;
 
