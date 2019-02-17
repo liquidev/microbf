@@ -25,7 +25,7 @@ typedef struct cell_ {
 typedef struct {
   // bytecode
   size_t pc;
-  // memory
+  // tape
   int pos;
   ubf_cell_t* ptr;
 } ubf_vm_t;

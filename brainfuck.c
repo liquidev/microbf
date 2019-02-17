@@ -84,6 +84,8 @@ ubf_interpret_result interpret(ubf_vm_t* vm, ubf_chunk_t* chunk) {
   #define READ() chunk->bytecode[vm->pc++]
   #define DISPATCH() goto *dispatch_table[READ()]
 
+  vm->pc = 0;
+
   DISPATCH();
   while (true) {
     opc_inc: {
