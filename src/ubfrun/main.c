@@ -8,14 +8,13 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "brainfuck.h"
+#include <ubf_brainfuck.h>
 
-typedef enum {
-  OK,
-  ERR_NO_FILENAME_SPECIFIED,
-  ERR_TOO_MANY_ARGUMENTS,
-  ERR_CANNOT_GET_FILE_SIZE
-} ubf_exec_status;
+// #define BENCHMARK
+
+#ifdef BENCHMARK
+# include "cycle.h"
+#endif
 
 typedef struct {
   char* string;
@@ -25,7 +24,7 @@ typedef struct {
 void read_stdin(string_t* result) {
   #define BUF_SIZE 4
   #define NEW_STR(cap) (char*) malloc(cap * sizeof(char))
-  
+
   result->length = 0;
   result->string = NULL;
 
@@ -60,12 +59,23 @@ void free_string(string_t* string) {
 int main(void) {
   string_t code;
   read_stdin(&code);
-  printf("\n");
-  
+
+  #ifdef BENCHMARK
+  ticks t0 = getticks();
+  #endif
+
   ubf_vm_t* vm = ubf_init_vm();
   ubf_interpret(vm, code.string);
-  
+
+  #ifdef BENCHMARK
+  ticks t1 = getticks();
+  double time = elapsed(t1, t0);
+  printf("\nfinished in %f ticks\n", time);
+  #endif
+
   ubf_free_vm(vm);
 
   free_string(&code);
+
+  return 0;
 }

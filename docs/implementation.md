@@ -15,7 +15,7 @@ compiles it to an intermediate representation: bytecode.
 microbf's bytecode is constructed out of chunks. This is the chunk declaration:
 ```c
 typedef struct {
-  uint8_t* bytecode;
+  uint8_t *bytecode;
   size_t length;
   size_t capacity;
 
@@ -29,10 +29,10 @@ This table is what stores all `JZ` and `JNZ` offsets. Those opcodes then
 reference them by their index on the offset table.
 
 The current implementation of the offset table only allows for 256 offsets,
-which isn't much, but future improvements could be made to increase this number
-to 65536, or even higher. This isn't done however, because it would require
-more memory allocation. Future versions of the interpreter will replace this
-statically-sized array with a dynamic array.
+which isn't much, but future improvements can be made to replace this
+statically-sized array with a dynamic array. A more efficient solution will
+probably be used, though: one not involving an offset table at all (directly
+specifying the offsets, like `JZ -5` to jump 5 bytes back).
 
 ### Opcodes
 
@@ -65,8 +65,8 @@ code into bytecode, but also optimizes it.
 ### Optimizing the bytecode
 
 The current implementation only includes one optimization: sequences of
-instructions are compiled as single opcodes. More optimizations will be
-implemented in future versions of the interpreter.
+instructions are compiled as single opcodes (eg. `++++++` compiles to `INC 6`).
+More optimizations will be implemented in future versions of the interpreter.
 
 ## Virtual machine
 
@@ -83,7 +83,7 @@ typedef struct {
   size_t pc;
   // tape
   int pos;
-  ubf_cell_t* ptr;
+  ubf_cell_t *ptr;
 } ubf_vm_t;
 ```
 
@@ -103,8 +103,8 @@ doubly linked list of memory cells. Here's the C declaration of a memory cell:
 ```c
 typedef struct cell_ {
   int8_t value;
-  struct cell_* left;
-  struct cell_* right;
+  struct cell_ *left;
+  struct cell_ *right;
 } ubf_cell_t;
 ```
 
@@ -131,12 +131,24 @@ it's allocated and initialized, and its `left` or `right` is set to the
 
 ### The execution loop
 
-For extra performance, microbf uses [computed gotos][cptgoto].
-
-  [cptgoto]: https://eli.thegreenplace.net/2012/07/12/computed-goto-for-efficient-dispatch-tables
+For extra performance, microbf uses [computed gotos](https://eli.thegreenplace.net/2012/07/12/computed-goto-for-efficient-dispatch-tables),
+when enabled in [ubf_options.h](/src/libubf/ubf_options.h) and supported by the
+compiler.
 
 Computed gotos consist of a dispatch table, containing pointers to labels, and
 the actual labels. Computed gotos are more efficient than a simple case
-statement, even up to 25%. Performance wasn't measured for microbf yet, but
-when it eventually does get measured, the results will be put up here.
+statement, even up to 25%.
 
+Here's a comparison between a regular switch and computed goto:
+
+|  | ticks | improvement |
+| --- | --- | --- |
+| switch | 36434372992 | - |
+| computed goto | 20414860928 | 1.78x |
+
+The tests were conducted using a modified version of ubfrun (uncomment
+`#define BENCHMARK` at the top of [main.c](/src/ubfrun/main.c)), on an AMD Ryzen
+1600 (overclocked to 3.8GHz). As shown,
+computed goto is much faster than a regular switch. However, switch is used as a
+fallback when the computed goto C extension is not supported (a non-GNU C
+compiler is used) or computed goto is explicitly disabled.

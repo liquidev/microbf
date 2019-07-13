@@ -9,10 +9,9 @@
 
 #include <stdio.h>
 
-#include "compiler.h"
-#include "debug.h"
+#include "ubf_debug.h"
 
-void disassemble(ubf_chunk_t* chunk) {
+void ubf_disassemble(ubf_chunk_t* chunk) {
   #define VAL(offset) chunk->bytecode[idx + offset]
   #define WRITE(fmt, arg) \
     printf(fmt, arg); \
@@ -43,7 +42,7 @@ void disassemble(ubf_chunk_t* chunk) {
   #undef VAL
 }
 
-const char* get_opcode_name(ubf_opcode opcode) {
+const char* ubf_get_opcode_name(ubf_opcode opcode) {
   switch (opcode) {
     case UBF_INC: return "INC";
     case UBF_DEC: return "DEC";

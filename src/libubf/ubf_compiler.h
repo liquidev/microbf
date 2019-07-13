@@ -11,6 +11,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/// Result of compilation.
+typedef enum {
+  UBF_COMPILE_OK,
+  UBF_COMPILE_UNBALANCED_LOOP
+} ubf_compile_result;
+
 /// A microbf opcode.
 typedef enum {
   UBF_INC, UBF_DEC, // + and -
@@ -22,7 +28,7 @@ typedef enum {
 
 /// A chunk of UBF bytecode.
 typedef struct {
-  uint8_t* bytecode;
+  uint8_t *bytecode;
   size_t length;
   size_t capacity;
 
@@ -31,12 +37,12 @@ typedef struct {
 } ubf_chunk_t;
 
 /// Allocates a new chunk of bytecode.
-ubf_chunk_t* ubf_alloc_chunk(size_t initial_length);
+ubf_chunk_t *ubf__alloc_chunk(size_t initial_length);
 
 /// Frees a previously allocated chunk of bytecode.
-void ubf_free_chunk(ubf_chunk_t* chunk);
+void ubf__free_chunk(ubf_chunk_t *chunk);
 
 /// Compiles brainfuck code into a chunk of bytecode.
-void ubf_compile(const char* code, size_t length, ubf_chunk_t* chunk);
+void ubf_compile(const char *code, size_t length, ubf_chunk_t *chunk);
 
 #endif
